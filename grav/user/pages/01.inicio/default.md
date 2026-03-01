@@ -1,5 +1,7 @@
 ---
 title: Bebras Bolivia
+process:
+    twig: true
 ---
 
 # Bebras Bolivia
@@ -17,7 +19,7 @@ Bebras es una iniciativa internacional que promueve el pensamiento computacional
 ### {{ noticia.title }}
 📅 {{ noticia.date|date("d/m/Y") }}
 
-{{ noticia.summary(30) }}
+{{ noticia.summary(100)|striptags }}...
 
 [Leer más]({{ noticia.url }})
 
