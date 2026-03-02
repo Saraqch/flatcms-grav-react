@@ -1,10 +1,8 @@
 ---
-title: Convocatoria de concurso matemático
+title: Solo Imagen (Galería)
 date: 2026-03-01
-type: texto_imagen
-image: bebras-lapiz.jpg
+type: imagen
+image: logo-bebras.png
 ---
 
-Segunda noticia del sistema.
-
-Bebras continúa creciendo en el país.
+Noticia de tipo **solo imagen**. Ideal para resaltar fotografías de eventos o logos de patrocinadores.
