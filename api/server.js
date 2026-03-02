@@ -31,17 +31,17 @@ app.get("/api/noticias", (req, res) => {
         const { data, content } = matter(file);
 
         noticias.push({
-          title: data.title || "Sin título",
-          date: data.date || null,
-          content: content.trim(),
-          slug: folder.replace(/^\d+\./, "") // "01.primera-noticia" -> "primera-noticia"
-        });
+        title: data.title,
+        date: data.date,
+        content: content.trim(),
+        type: data.type || "texto",
+        image: data.image || null
+      });
       }
     }
   });
 
-  // Ordenar por fecha (más reciente primero)
-  noticias.sort((a, b) => new Date(b.date) - new Date(a.date));
+   noticias.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   res.json(noticias);
 });
