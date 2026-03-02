@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [noticias, setNoticias] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/noticias")
+      .then(res => res.json())
+      .then(data => setNoticias(data));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header className="header">
+        <h1>Bebras Bolivia</h1>
+        <nav>
+          <a href="#">Acerca de</a>
+          <a href="#">Plan de estudios</a>
+          <a href="#">Noticias</a>
+        </nav>
       </header>
+
+      <main className="container">
+        <h2>Últimas Noticias</h2>
+
+        {noticias.map((n, i) => (
+          <div key={i} className="news-card">
+            <h3>{n.title}</h3>
+            <small>{n.date}</small>
+            <p>{n.content}</p>
+          </div>
+        ))}
+      </main>
+
+      <footer className="footer">
+        © 2026 Bebras Bolivia
+      </footer>
     </div>
   );
 }
