@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CONFIG from "../config";
 import "./AdminPanel.css";
 
 const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
@@ -68,8 +69,8 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
 
     try {
       const url = editingId 
-        ? `http://localhost:3001/api/noticias/${editingId}`
-        : "http://localhost:3001/api/noticias";
+        ? `${CONFIG.API_URL}/noticias/${editingId}`
+        : `${CONFIG.API_URL}/noticias`;
       
       const method = editingId ? "PUT" : "POST";
 
@@ -96,7 +97,7 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
 
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar esta noticia?")) {
-      await fetch(`http://localhost:3001/api/noticias/${id}`, { method: "DELETE" });
+      await fetch(`${CONFIG.API_URL}/noticias/${id}`, { method: "DELETE" });
       onNoticiaEliminada();
     }
   };

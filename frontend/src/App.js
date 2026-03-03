@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CardNoticia from './components/CardNoticia';
 import AdminPanel from './components/AdminPanel'; 
+import CONFIG from './config';
 import './App.css';
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
 
   const fetchNoticias = () => {
     setLoading(true);
-    fetch('http://localhost:3001/api/noticias')
+    fetch(`${CONFIG.API_URL}/noticias`)
       .then(res => res.json())
       .then(data => {
         setNoticias(data);
