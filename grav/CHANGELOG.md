@@ -186,7 +186,7 @@
 ## 06/01/2023
 
 1. [](#improved)
-   * Added the ability to set a configurable 'key' for the Twig Cache Tag: `{% cache 'my-key' 600 %}`
+   * Added the ability to set a configurable 'key' for the Twig Cache Tag: `{% raw %}{% cache 'my-key' 600 %}{% endraw %}`
 1. [](#bugfix)
    * Fixed an issue with special characters in slug's would cause redirect loops
 

@@ -1,7 +1,7 @@
 ---
 title: Noticias
 content:
-  items: @self.children
+  items: '@self.children'
 ---
 
 # Noticias
