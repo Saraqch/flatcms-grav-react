@@ -102,6 +102,55 @@ ${content}`;
   res.json({ message: "Noticia creada con éxito" });
 });
 
+// 2.1 Actualizar noticia (UPDATE)
+app.put("/api/noticias/:id", (req, res) => {
+  const { title, date, type, content } = req.body;
+  const folderPath = path.join(GRAV_PAGES, req.params.id);
+  const itemPath = path.join(folderPath, "item.md");
+
+  if (!fs.existsSync(folderPath)) return res.status(404).send("Noticia no encontrada");
+
+  // Leer metadatos actuales para no perder la imagen si no se sube una nueva
+  const fileContentOld = fs.readFileSync(itemPath, "utf-8");
+  const { data: oldData } = matter(fileContentOld);
+
+  let imageField = "";
+  let imageNames = [];
+
+  if (req.files && req.files.image) {
+    const files = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
+    for (const file of files) {
+      const imageName = `${Date.now()}-${file.name.replace(/\s/g, "-")}`;
+      file.mv(path.join(ASSETS_PATH, imageName));
+      imageNames.push(imageName);
+    }
+    imageField = imageNames.length > 1 
+      ? `\nimage:\n${imageNames.map(name => `  - ${name}`).join("\n")}` 
+      : `\nimage: ${imageNames[0]}`;
+  } else {
+    // Mantener la imagen anterior si existe
+    if (oldData.image) {
+      if (Array.isArray(oldData.image)) {
+        imageField = `\nimage:\n${oldData.image.map(name => `  - ${name}`).join("\n")}`;
+      } else {
+        imageField = `\nimage: ${oldData.image}`;
+      }
+    } else {
+      imageField = `\nimage: null`;
+    }
+  }
+
+  const newFileContent = `---
+title: ${title}
+date: ${date}
+type: ${type}${imageField}
+---
+${content}`;
+
+  fs.writeFileSync(itemPath, newFileContent);
+  res.json({ message: "Noticia actualizada con éxito" });
+});
+
 // 3. Eliminar noticia (DELETE)
 app.delete("/api/noticias/:id", (req, res) => {
   const folderPath = path.join(GRAV_PAGES, req.params.id);

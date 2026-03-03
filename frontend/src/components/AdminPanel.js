@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import "./AdminPanel.css";
 
 const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     date: new Date().toISOString().split("T")[0],
     type: "texto",
     content: "",
   });
-  const [images, setImages] = useState([]); // Ahora es un array para soportar múltiples
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -21,11 +22,34 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
     setImages(selectedFiles);
   };
 
+  const handleEdit = (noticia) => {
+    setEditingId(noticia.id);
+    setFormData({
+      title: noticia.title,
+      date: noticia.date,
+      type: noticia.type || "texto",
+      content: noticia.content || "",
+    });
+    setImages([]); // Se limpian las imágenes para subir nuevas si se desea
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setFormData({
+      title: "",
+      date: new Date().toISOString().split("T")[0],
+      type: "texto",
+      content: "",
+    });
+    setImages([]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación según tipo
-    if (formData.type === "imagen" && images.length === 0) {
+    // Validación según tipo (solo para nuevas noticias o si se cambia a imagen)
+    if (!editingId && formData.type === "imagen" && images.length === 0) {
       alert("Debes subir al menos una imagen para este tipo de noticia.");
       return;
     }
@@ -38,17 +62,19 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
     data.append("type", formData.type);
     data.append("content", formData.content);
     
-    // Agregar todas las imágenes seleccionadas
     if (images.length > 0) {
-      images.forEach((img) => {
-        data.append("image", img);
-      });
+      images.forEach((img) => data.append("image", img));
     }
 
     try {
-      console.log("Enviando noticia...");
-      const response = await fetch("http://localhost:3001/api/noticias", {
-        method: "POST",
+      const url = editingId 
+        ? `http://localhost:3001/api/noticias/${editingId}`
+        : "http://localhost:3001/api/noticias";
+      
+      const method = editingId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
         body: data,
       });
 
@@ -57,17 +83,11 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
         throw new Error(errorText || "Error en el servidor");
       }
 
-      alert("¡Noticia creada con éxito!");
-      setFormData({
-        title: "",
-        date: new Date().toISOString().split("T")[0],
-        type: "texto",
-        content: "",
-      });
-      setImages([]);
+      alert(editingId ? "¡Noticia actualizada!" : "¡Noticia creada!");
+      cancelEdit();
       onNoticiaCreada();
     } catch (error) {
-      console.error("Error al crear noticia:", error);
+      console.error("Error al procesar noticia:", error);
       alert("Error: " + error.message);
     } finally {
       setLoading(false);
@@ -133,8 +153,13 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
         </div>
 
         <button type="submit" className="btn-submit" disabled={loading}>
-          {loading ? "Guardando..." : "Publicar Noticia"}
+          {loading ? "Guardando..." : (editingId ? "Actualizar Noticia" : "Publicar Noticia")}
         </button>
+        {editingId && (
+          <button type="button" onClick={cancelEdit} className="btn-cancel" style={{ marginLeft: '10px' }}>
+            Cancelar Edición
+          </button>
+        )}
       </form>
 
       <hr />
@@ -143,10 +168,13 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
       <div className="news-list">
         {noticias.map((n) => (
           <div key={n.id} className="news-item">
-            <div>
+            <div className="news-info">
               <strong>{n.title}</strong> <small>({n.type})</small>
             </div>
-            <button onClick={() => handleDelete(n.id)} className="btn-delete">Eliminar</button>
+            <div className="news-actions">
+              <button onClick={() => handleEdit(n)} className="btn-edit">Editar</button>
+              <button onClick={() => handleDelete(n.id)} className="btn-delete">Eliminar</button>
+            </div>
           </div>
         ))}
       </div>

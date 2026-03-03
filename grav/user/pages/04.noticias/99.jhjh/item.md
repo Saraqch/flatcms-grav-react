@@ -1,6 +1,6 @@
 ---
 title: jhjh
-date: 2026-03-03
+date: 2026-02-03
 type: imagen
-image: 1772527814134-3.jpg
+image: 1772528283822-4.jpg
 ---
