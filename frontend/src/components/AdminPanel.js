@@ -8,7 +8,7 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
     type: "texto",
     content: "",
   });
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]); // Ahora es un array para soportar múltiples
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -17,11 +17,19 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const selectedFiles = Array.from(e.target.files).slice(0, 3);
+    setImages(selectedFiles);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validación según tipo
+    if (formData.type === "imagen" && images.length === 0) {
+      alert("Debes subir al menos una imagen para este tipo de noticia.");
+      return;
+    }
+
     setLoading(true);
 
     const data = new FormData();
@@ -29,27 +37,38 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
     data.append("date", formData.date);
     data.append("type", formData.type);
     data.append("content", formData.content);
-    if (image) data.append("image", image);
+    
+    // Agregar todas las imágenes seleccionadas
+    if (images.length > 0) {
+      images.forEach((img) => {
+        data.append("image", img);
+      });
+    }
 
     try {
+      console.log("Enviando noticia...");
       const response = await fetch("http://localhost:3001/api/noticias", {
         method: "POST",
         body: data,
       });
 
-      if (response.ok) {
-        alert("¡Noticia creada con éxito!");
-        setFormData({
-          title: "",
-          date: new Date().toISOString().split("T")[0],
-          type: "texto",
-          content: "",
-        });
-        setImage(null);
-        onNoticiaCreada();
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error en el servidor");
       }
+
+      alert("¡Noticia creada con éxito!");
+      setFormData({
+        title: "",
+        date: new Date().toISOString().split("T")[0],
+        type: "texto",
+        content: "",
+      });
+      setImages([]);
+      onNoticiaCreada();
     } catch (error) {
       console.error("Error al crear noticia:", error);
+      alert("Error: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -89,14 +108,28 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
 
         {(formData.type === "texto_imagen" || formData.type === "imagen") && (
           <div className="form-group">
-            <label>Subir Imagen</label>
-            <input type="file" accept="image/*" onChange={handleImageChange} required={formData.type === "imagen"} />
+            <label>{formData.type === "imagen" ? "Subir Imágenes (Máx 3)" : "Subir Imagen"}</label>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleImageChange} 
+              required={formData.type === "imagen"} 
+              multiple={formData.type === "imagen"} 
+            />
+            {images.length > 0 && <small>{images.length} archivo(s) seleccionado(s)</small>}
           </div>
         )}
 
         <div className="form-group">
           <label>Contenido</label>
-          <textarea name="content" value={formData.content} onChange={handleChange} rows="4" required />
+          <textarea 
+            name="content" 
+            value={formData.content} 
+            onChange={handleChange} 
+            rows="4" 
+            required={formData.type !== "imagen"} 
+            placeholder={formData.type === "imagen" ? "Contenido opcional..." : "Escribe el contenido..."}
+          />
         </div>
 
         <button type="submit" className="btn-submit" disabled={loading}>

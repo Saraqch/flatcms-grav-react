@@ -4,29 +4,40 @@ import './CardNoticia.css';
 const CardNoticia = ({ noticia }) => {
   const { title, date, content, type, image } = noticia;
 
+  // Convertir image a array si es un solo string
+  const images = Array.isArray(image) ? image : (image ? [image] : []);
+
   return (
     <div className={`card-noticia ${type}`}>
-      {/* IMAGEN: Se muestra si el tipo es 'imagen' o 'texto_imagen' */}
-      {image && (type === 'imagen' || type === 'texto_imagen') && (
-        <div className="card-media">
-          {/* Aquí usaríamos la ruta a la carpeta de assets de Grav */}
-          <img src={`/assets/images/${image}`} alt={title} className="noticia-img" />
+      {/* RENDERIZADO DE IMÁGENES */}
+      {images.length > 0 && (type === 'imagen' || type === 'texto_imagen') && (
+        <div className={`card-media ${images.length > 1 ? 'grid-images' : ''}`}>
+          {images.map((img, index) => (
+            <img 
+              key={index}
+              src={`/assets/images/${img}`} 
+              alt={`${title}-${index}`} 
+              className={`noticia-img img-count-${images.length}`} 
+            />
+          ))}
         </div>
       )}
 
-      {/* TEXTO: Se muestra si el tipo es 'texto' o 'texto_imagen' */}
-      {(type === 'texto' || type === 'texto_imagen') && (
+      {/* TEXTO */}
+      {type !== 'imagen' && (
         <div className="card-content">
           <span className="noticia-date">{new Date(date).toLocaleDateString()}</span>
           <h3 className="noticia-title">{title}</h3>
-          <p className="noticia-excerpt">{content.substring(0, 150)}...</p>
+          <p className="noticia-excerpt text-justify">{content}</p>
         </div>
       )}
 
-      {/* Si es solo imagen, el título puede ir como un overlay o pie de foto */}
-      {type === 'imagen' && !content && (
-        <div className="card-content overlay">
+      {/* Si es solo imagen, el título va como overlay o pie */}
+      {type === 'imagen' && (
+        <div className="card-content">
+          <span className="noticia-date">{new Date(date).toLocaleDateString()}</span>
           <h3 className="noticia-title">{title}</h3>
+          {content && <p className="noticia-excerpt">{content}</p>}
         </div>
       )}
     </div>
