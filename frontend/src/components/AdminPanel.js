@@ -64,7 +64,7 @@ const AdminPanel = ({ noticias, onNoticiaCreada, onNoticiaEliminada }) => {
 
   return (
     <div className="admin-panel shadow-sm">
-      <h2 className="admin-title">Panel de Administración (ADMIN)</h2>
+      <h2 className="admin-title">Panel de Administración</h2>
       
       <form onSubmit={handleSubmit} className="admin-form">
         <div className="form-group">
