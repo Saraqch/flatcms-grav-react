@@ -49,7 +49,7 @@ app.get("/api/noticias", (req, res) => {
 app.post("/api/noticias", (req, res) => {
   const { title, date, type, content } = req.body;
   const slug = slugify(title, { lower: true, strict: true });
-  const folderName = `99.${slug}`; // 99 para que aparezca al final o según lógica de Grav
+  const folderName = `99.${slug}`;
   const folderPath = path.join(GRAV_PAGES, folderName);
   
   if (fs.existsSync(folderPath)) return res.status(400).send("La noticia ya existe");
