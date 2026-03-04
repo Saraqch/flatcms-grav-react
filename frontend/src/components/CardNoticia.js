@@ -1,4 +1,5 @@
 import React from 'react';
+import CONFIG from '../config';
 import './CardNoticia.css';
 
 const CardNoticia = ({ noticia }) => {
@@ -6,6 +7,9 @@ const CardNoticia = ({ noticia }) => {
 
   // Convertir image a array si es un solo string
   const images = Array.isArray(image) ? image : (image ? [image] : []);
+
+  // La URL base de la API sin el /api al final
+  const BASE_URL = CONFIG.API_URL.replace('/api', '');
 
   return (
     <div className={`card-noticia ${type}`}>
@@ -15,7 +19,7 @@ const CardNoticia = ({ noticia }) => {
           {images.map((img, index) => (
             <img 
               key={index}
-              src={`/assets/images/${img}`} 
+              src={`${BASE_URL}/assets/images/${img}`} 
               alt={`${title}-${index}`} 
               className={`noticia-img img-count-${images.length}`} 
             />

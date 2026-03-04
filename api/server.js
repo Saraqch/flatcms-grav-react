@@ -25,6 +25,9 @@ app.use(cors({
 app.use(express.json());
 app.use(fileUpload());
 
+// Servir imágenes estáticas
+app.use("/assets/images", express.static(path.join(__dirname, "../frontend/public/assets/images")));
+
 const GRAV_PAGES = path.join(__dirname, "../grav/user/pages/04.noticias");
 const ASSETS_PATH = path.join(__dirname, "../frontend/public/assets/images");
 
