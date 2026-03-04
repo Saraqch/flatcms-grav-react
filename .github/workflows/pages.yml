@@ -34,7 +34,7 @@ jobs:
         run: npm run build
         env:
           PUBLIC_URL: /flatcms-grav-react/
-          REACT_APP_API_URL: https://flatcms-grav-api.onrender.com/api
+          REACT_APP_API_URL: https://flatcms-grav-react.onrender.com/api
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
