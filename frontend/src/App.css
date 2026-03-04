@@ -1,6 +1,39 @@
+/* Mobile Specific Optimizations */
+@media (max-width: 768px) {
+  .logo {
+    font-size: 1.2rem !important;
+  }
+  
+  .hero {
+    padding: 1.5rem 1rem !important;
+    margin: 1rem 0 !important;
+  }
+
+  .hero h2 {
+    font-size: 1.4rem !important;
+  }
+
+  .noticias-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .main-content {
+    padding: 0.5rem !important;
+  }
+
+  /* Ajuste botones Admin */
+  button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Base Styles */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
 }
 
 .header {

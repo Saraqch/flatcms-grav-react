@@ -15,10 +15,10 @@ const Header = () => {
         </button>
         <nav className={`nav ${isOpen ? 'open' : ''}`}>
           <ul>
-            <li><a href="/" onClick={() => setIsOpen(false)}>Inicio</a></li>
-            <li><a href="/acerca" onClick={() => setIsOpen(false)}>Acerca de</a></li>
-            <li><a href="/plan" onClick={() => setIsOpen(false)}>Plan de estudios</a></li>
-            <li><a href="/noticias" onClick={() => setIsOpen(false)}>Noticias</a></li>
+            <li><a href="#noticias" onClick={() => setIsOpen(false)} style={{ color: "var(--bebras-yellow)", fontWeight: "bold" }}>Inicio</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); setIsOpen(false); }} style={{ opacity: 0.5, pointerEvents: "none" }}>Acerca de</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); setIsOpen(false); }} style={{ opacity: 0.5, pointerEvents: "none" }}>Plan de estudios</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); setIsOpen(false); }} style={{ opacity: 0.5, pointerEvents: "none" }}>Noticias</a></li>
           </ul>
         </nav>
       </div>

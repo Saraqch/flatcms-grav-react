@@ -1,3 +1,29 @@
+/* Mobile Specific */
+@media (max-width: 600px) {
+  .card-noticia {
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .card-noticia.texto_imagen .noticia-img {
+    height: 180px;
+  }
+
+  .card-content h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-content p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .date {
+    font-size: 0.8rem;
+  }
+}
+
 .card-noticia {
   background: white;
   border-radius: 12px;
