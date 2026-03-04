@@ -1,0 +1,14 @@
+{
+  "name": "flatcms-fullstack",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node api/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "gray-matter": "^4.0.3",
+    "slugify": "^1.6.6"
+  }
+}

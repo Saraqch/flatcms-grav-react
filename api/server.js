@@ -7,12 +7,29 @@ const fileUpload = require("express-fileupload");
 const slugify = require("slugify");
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://saraqch.github.io'
+];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(fileUpload());
 
 const GRAV_PAGES = path.join(__dirname, "../grav/user/pages/04.noticias");
 const ASSETS_PATH = path.join(__dirname, "../frontend/public/assets/images");
+
+console.log("Pages Path:", GRAV_PAGES);
+console.log("Assets Path:", ASSETS_PATH);
 
 // Asegurar que la carpeta de assets existe
 if (!fs.existsSync(ASSETS_PATH)) {
